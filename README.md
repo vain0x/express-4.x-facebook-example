@@ -1,3 +1,37 @@
+This is a fork of <https://github.com/passport/express-4.x-facebook-example>. Use Google to login instead of Facebook. Because both of them use OAuth2, this example is almost same.
+
+See also the README of <https://github.com/jaredhanson/passport-google-oauth2>.
+
+First, you need to create a google account, a new project, a credential and an OAuth client ID in <https://console.developers.google.com>. Note that you don't need payment setings or owned hostnames.
+
+Second, make a configuration file with:
+
+```sh
+cp .env-example .env
+```
+
+and edit `.env` to fill your client ID and client secret like this:
+
+```conf
+PORT=8080
+GOOGLE_CLIENT_ID=1111222233334444.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=aBcDeFgH_iJkLmN
+GOOGLE_AUTH_CALLBACK=http://localhost:8080/auth/google/callback/
+```
+
+Finally npm install and run the server:
+
+```sh
+npm ci
+node server.js
+```
+
+Visit <http://localhost:8080>.
+
+Original README is below:
+
+----
+
 This example demonstrates how to use [Express](http://expressjs.com/) 4.x and
 [Passport](http://passportjs.org/) to authenticate users using Facebook.  Use
 this example as a starting point for your own web applications.

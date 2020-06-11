@@ -2,8 +2,9 @@ require('dotenv').config();
 
 var express = require('express');
 var passport = require('passport');
-var Strategy = require('passport-facebook').Strategy;
+var GoogleStrategy = require('passport-google-oauth20').Strategy;
 
+// TODO: s/Facebook/Google/g
 
 // Configure the Facebook strategy for use by Passport.
 //
@@ -12,20 +13,26 @@ var Strategy = require('passport-facebook').Strategy;
 // behalf, along with the user's profile.  The function must invoke `cb`
 // with a user object, which will be set at `req.user` in route handlers after
 // authentication.
-passport.use(new Strategy({
-    clientID: process.env['FACEBOOK_CLIENT_ID'],
-    clientSecret: process.env['FACEBOOK_CLIENT_SECRET'],
-    callbackURL: '/return'
+passport.use(new GoogleStrategy({
+    clientID: process.env['GOOGLE_CLIENT_ID'],
+    clientSecret: process.env['GOOGLE_CLIENT_SECRET'],
+    callbackURL: process.env['GOOGLE_AUTH_CALLBACK']
   },
   function(accessToken, refreshToken, profile, cb) {
+    console.debug('verify. profile = ', profile)
+
     // In this example, the user's Facebook profile is supplied as the user
     // record.  In a production-quality application, the Facebook profile should
     // be associated with a user record in the application's database, which
     // allows for account linking and authentication with other identity
     // providers.
-    return cb(null, profile);
-  }));
+    // User.findOrCreate({ googleId: profile.id }, function (err, user) {
+    //   return cb(err, user);
+    // });
 
+    cb(null, profile);
+  }
+));
 
 // Configure Passport authenticated session persistence.
 //
@@ -76,11 +83,11 @@ app.get('/login',
     res.render('login');
   });
 
-app.get('/login/facebook',
-  passport.authenticate('facebook'));
+app.get('/login/google',
+  passport.authenticate('google', { scope: ['profile'] }));
 
-app.get('/return', 
-  passport.authenticate('facebook', { failureRedirect: '/login' }),
+app.get('/auth/google/callback/',
+  passport.authenticate('google', { failureRedirect: '/login' }),
   function(req, res) {
     res.redirect('/');
   });
@@ -88,7 +95,11 @@ app.get('/return',
 app.get('/profile',
   require('connect-ensure-login').ensureLoggedIn(),
   function(req, res){
+    console.log(req)
     res.render('profile', { user: req.user });
   });
 
-app.listen(process.env['PORT'] || 8080);
+var port = process.env['PORT'] || 8080
+app.listen(port, function() {
+  console.debug('listening http://localhost:' + port)
+});
