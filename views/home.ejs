@@ -1,5 +1,50 @@
-<% if (!user) { %>
-	<p>Welcome! Please <a href="/login">log in</a>.</p>
-<% } else { %>
-	<p>Hello, <%= user.displayName %>. View your <a href="/profile">profile</a>.</p>
-<% } %>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Google サインイン用 -->
+  <meta name="google-signin-scope" content="email profile">
+  <meta name="google-signin-client_id" content="<%= GOOGLE_CLIENT_ID %>">
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+  <!-- アプリ用 -->
+  <title>ホーム | アプリ</title>
+  <style rel="stylesheet" href="main.css"></style>
+  <script src="google-sign-in.js" async defer></script>
+</head>
+<body>
+  <header>
+    <% if (!user) { %>
+      <script>
+        function onSignIn(googleUser) {
+          return GoogleSignIn.onSignIn(googleUser)
+        }
+      </script>
+      <div class="g-signin2" data-onsuccess="onSignIn" data-theme="light"></div>
+    <% } else { %>
+      <a href="/profile">
+        <%= user.displayName %> さん
+      </a>
+    <% } %>
+  </header>
+
+  <main>
+    <% if (!user) { %>
+      ログインしてください。
+    <% } else { %>
+      <h2>
+        メニュー
+      </h2>
+
+      <ul>
+        <li>
+          <a href="https://meet.google.com/">グーグル meet</a>
+        </li>
+      </ul>
+    <% } %>
+  </main>
+</body>
+</html>
