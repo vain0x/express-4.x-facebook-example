@@ -23,7 +23,7 @@ Finally npm install and run the server:
 
 ```sh
 npm ci
-node server.js
+node src/server.js
 ```
 
 Visit <http://localhost:8080>.

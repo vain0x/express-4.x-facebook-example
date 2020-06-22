@@ -24,14 +24,11 @@ const main = () => {
   const {
     PORT,
     GOOGLE_CLIENT_ID,
-    GOOGLE_CLIENT_SECRET,
-    GOOGLE_AUTH_CALLBACK,
   } = process.env
 
-  if (!GOOGLE_CLIENT_ID
-    || !GOOGLE_CLIENT_SECRET
-    || !GOOGLE_AUTH_CALLBACK
-  ) throw new Error("setup .env")
+  if (!GOOGLE_CLIENT_ID) {
+    throw new Error("setup .env")
+  }
 
   const app = express()
 
@@ -99,7 +96,7 @@ const main = () => {
 
   app.use(express.static(__dirname + "/../docs"))
 
-  const port = PORT || 8080
+  const port = PORT ?? 8080
   app.listen(port, () => {
     console.debug('listening http://localhost:' + port)
   })
